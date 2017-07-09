@@ -51,7 +51,8 @@ olcAccess: to * by self write by users read by anonymous auth
 dn: olcDatabase=config,cn=config
 objectClass: olcDatabaseConfig
 olcDatabase: config
-olcRootPw: $ENCRYPTED_LDAP_CONFIG_PW
+olcRootDN: $LDAP_CONFIG_DN
+olcRootPW: $ENCRYPTED_LDAP_CONFIG_PW
 olcAccess: to * by * none
 
 dn: olcDatabase=mdb,cn=config
@@ -114,6 +115,10 @@ do_initial_setup () {
     if [[ -z ${LDAP_CONFIG_PW} ]]; then
         prefix_print "LDAP_CONFIG_PW not set, using LDAP_ROOT_DN_PW instead."
         export LDAP_CONFIG_PW=$LDAP_ROOT_DN_PW
+    fi
+    if [[ -z ${LDAP_CONFIG_DN} ]]; then
+        prefix_print "LDAP_CONFIG_DN not set, using cn=admin,cn=config instead."
+        export LDAP_CONFIG_DN="cn=admin,cn=config"
     fi
 
     write_configuration_ldif
