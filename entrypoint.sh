@@ -32,6 +32,7 @@ dn: cn=module,cn=config
 objectClass: olcModuleList
 cn: module
 olcModulepath:	/usr/lib/openldap
+olcModuleLoad: back_mdb.so
 
 dn: cn=schema,cn=config
 objectClass: olcSchemaConfig
