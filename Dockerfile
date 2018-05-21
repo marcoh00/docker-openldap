@@ -6,7 +6,7 @@ ENV OPENLDAP_VERSION 2.4.45-r3
 
 COPY entrypoint.sh /
 RUN apk update --no-cache && \
-    apk add --no-cache "openldap=${OPENLDAP_VERSION}" openldap-clients openldap-backend-all netcat-openbsd && \
+    apk add --no-cache "openldap=${OPENLDAP_VERSION}" openldap-clients openldap-backend-all openldap-overlay-refint openldap-overlay-memberof netcat-openbsd && \
     rm -rf /var/cache/apk/* && \
     install -o ldap -g ldap -m 0700 -d /var/lib/openldap/run && \
     chmod 0500 /entrypoint.sh

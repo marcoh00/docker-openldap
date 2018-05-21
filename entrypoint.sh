@@ -31,8 +31,10 @@ olcPidFile: /var/lib/openldap/run/slapd.pid
 dn: cn=module,cn=config
 objectClass: olcModuleList
 cn: module
-olcModulepath:	/usr/lib/openldap
+olcModulepath: /usr/lib/openldap
 olcModuleLoad: back_mdb.so
+olcModuleLoad: memberof.so
+olcModuleLoad: refint.so
 
 dn: cn=schema,cn=config
 objectClass: olcSchemaConfig
@@ -56,15 +58,35 @@ olcRootDN: $LDAP_CONFIG_DN
 olcRootPW: $ENCRYPTED_LDAP_CONFIG_PW
 olcAccess: to * by * none
 
-dn: olcDatabase=mdb,cn=config
+dn: olcDatabase={1}mdb,cn=config
 objectClass: olcDatabaseConfig
 objectClass: olcMdbConfig
 olcDatabase: mdb
 olcSuffix: $LDAP_SUFFIX
 olcRootDN: $LDAP_ROOT_DN
 olcRootPW: $ENCRYPTED_LDAP_ROOT_DN_PW
-olcDbDirectory:	/var/lib/openldap/openldap-data
+olcDbDirectory: /var/lib/openldap/openldap-data
 olcDbIndex: objectClass eq
+
+dn: olcOverlay={0}memberof,olcDatabase={1}mdb,cn=config
+objectClass: olcConfig
+objectClass: olcMemberOf
+objectClass: olcOverlayConfig
+objectClass: top
+olcOverlay: memberof
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+olcMemberOfGroupOC: groupOfNames
+olcMemberOfMemberAD: member
+olcMemberOfMemberOfAD: memberOf
+
+dn: olcOverlay={1}refint,olcDatabase={1}mdb,cn=config
+objectClass: olcConfig
+objectClass: olcOverlayConfig
+objectClass: olcRefintConfig
+objectClass: top
+olcOverlay: {1}refint
+olcRefintAttribute: memberof member
 EOF
 }
 
@@ -123,7 +145,6 @@ do_initial_setup () {
     fi
 
     write_configuration_ldif
-    
     prefix_print "Generate initial cn=config database"
     mkdir -p "/var/lib/openldap/openldap-config/cn=config"
     slapadd -n 0 -F "/var/lib/openldap/openldap-config/cn=config" -l "/etc/openldap/initial_configuration.ldif"
