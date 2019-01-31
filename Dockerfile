@@ -1,8 +1,8 @@
-FROM alpine:3.7
+FROM alpine:3.9
 
 MAINTAINER "Marco Huenseler <marcoh.huenseler+git@gmail.com>"
 
-ENV OPENLDAP_VERSION 2.4.45-r3
+ENV OPENLDAP_VERSION 2.4.47-r2
 
 COPY entrypoint.sh /
 RUN apk update --no-cache && \
