@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.10
 
 MAINTAINER "Marco Huenseler <marcoh.huenseler+git@gmail.com>"
 
